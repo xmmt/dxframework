@@ -54,7 +54,7 @@ TriangleComponent::TriangleComponent(
         if (errorVertexCode) {
             char* compileErrors = (char*)(errorVertexCode->GetBufferPointer());
 
-            std::cout << compileErrors << std::endl;
+            WriteError() << compileErrors << "\n";
         }
         // If there was  nothing in the error message then it simply could not find the shader file itself.
         else {
@@ -85,7 +85,7 @@ TriangleComponent::TriangleComponent(
         if (errorPixelCode) {
             char* compileErrors = (char*)(errorPixelCode->GetBufferPointer());
 
-            std::cout << compileErrors << std::endl;
+            WriteError() << compileErrors << "\n";
         }
         // If there was  nothing in the error message then it simply could not find the shader file itself.
         else {
