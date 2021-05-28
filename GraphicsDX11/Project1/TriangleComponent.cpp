@@ -2,6 +2,8 @@
 
 #include "TriangleComponent.hpp"
 
+#include <fstream>
+
 using namespace DirectX;
 
 TriangleComponent::TriangleComponent(
@@ -34,80 +36,139 @@ TriangleComponent::TriangleComponent(
     ID3DBlob* errorVertexCode;
     ID3DBlob* errorPixelCode;
 
-    res = D3DCompileFromFile(
-      L"MiniTri.fx",
-      vertexMacro.empty() ? nullptr : vertexMacro.data(),
-      nullptr /*include*/,
-      "VSMain",
-      "vs_5_0",
-#if _DEBUG
-      D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION,
-#else
-      D3DCOMPILE_OPTIMIZATION_LEVEL3,
-#endif
-      0,
-      &vertexShaderByteCode_,
-      &errorVertexCode);
+//    res = D3DCompileFromFile(
+//      L"MiniTri.fx",
+//      vertexMacro.empty() ? nullptr : vertexMacro.data(),
+//      nullptr /*include*/,
+//      "VSMain",
+//      "vs_5_0",
+//#if _DEBUG
+//      D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION | D3DCOMPILE_DEBUG_NAME_FOR_BINARY,
+//#else
+//      D3DCOMPILE_OPTIMIZATION_LEVEL3,
+//#endif
+//      0,
+//      &vertexShaderByteCode_,
+//      &errorVertexCode);
+//    {
+//        Microsoft::WRL::ComPtr<ID3DBlob> pPDB;
+//        D3DGetBlobPart(vertexShaderByteCode_->GetBufferPointer(), vertexShaderByteCode_->GetBufferSize(), D3D_BLOB_PDB, 0, pPDB.GetAddressOf());
+//        Microsoft::WRL::ComPtr<ID3DBlob> pPDBName;
+//        D3DGetBlobPart(vertexShaderByteCode_->GetBufferPointer(), vertexShaderByteCode_->GetBufferSize(), D3D_BLOB_DEBUG_NAME, 0, pPDBName.GetAddressOf());
+//        struct ShaderDebugName {
+//            uint16_t Flags;      // Reserved, must be set to zero.
+//            uint16_t NameLength; // Length of the debug name, without null terminator.
+//                                 // Followed by NameLength bytes of the UTF-8-encoded name.
+//                                 // Followed by a null terminator.
+//                                 // Followed by [0-3] zero bytes to align to a 4-byte boundary.
+//        };
+//        auto pDebugNameData = reinterpret_cast<const ShaderDebugName*>(pPDBName->GetBufferPointer());
+//        auto pName = reinterpret_cast<const char*>(pDebugNameData + 1);
+//        std::ofstream fout(pName, std::ios::binary);
+//        fout.write((char*)pPDB->GetBufferPointer(), pPDB->GetBufferSize());
+//    }
 
-    if (FAILED(res)) {
-        // If the shader failed to compile it should have written something to the error message.
-        if (errorVertexCode) {
-            char* compileErrors = (char*)(errorVertexCode->GetBufferPointer());
 
-            WriteError() << compileErrors << "\n";
-        }
-        // If there was  nothing in the error message then it simply could not find the shader file itself.
-        else {
-            // MessageBox(display_.hWnd(), L"MiniTri.fx", L"Missing Shader File", MB_OK);
-            WriteError() << "MiniTri.fx Missing Shader File\n";
-        }
+//    if (FAILED(res)) {
+//        // If the shader failed to compile it should have written something to the error message.
+//        if (errorVertexCode) {
+//            char* compileErrors = (char*)(errorVertexCode->GetBufferPointer());
+//
+//            WriteError() << compileErrors << "\n";
+//        }
+//        // If there was  nothing in the error message then it simply could not find the shader file itself.
+//        else {
+//            // MessageBox(display_.hWnd(), L"MiniTri.fx", L"Missing Shader File", MB_OK);
+//            WriteError() << "MiniTri.fx Missing Shader File\n";
+//        }
+//
+//        ::exit(0);
+//    }
 
-        ::exit(0);
-    }
+//    res = D3DCompileFromFile(
+//      L"MiniTri.fx",
+//      pixelMacro.empty() ? nullptr : pixelMacro.data(),
+//      nullptr /*include*/,
+//      "PSMain",
+//      "ps_5_0",
+//#if _DEBUG
+//      D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION | D3DCOMPILE_DEBUG_NAME_FOR_BINARY,
+//#else
+//      D3DCOMPILE_OPTIMIZATION_LEVEL3,
+//#endif
+//      0,
+//      &pixelShaderByteCode_,
+//      &errorPixelCode);
+//
+//    {
+//        Microsoft::WRL::ComPtr<ID3DBlob> pPDB;
+//        D3DGetBlobPart(pixelShaderByteCode_->GetBufferPointer(), pixelShaderByteCode_->GetBufferSize(), D3D_BLOB_PDB, 0, pPDB.GetAddressOf());
+//        Microsoft::WRL::ComPtr<ID3DBlob> pPDBName;
+//        auto res = D3DGetBlobPart(pixelShaderByteCode_->GetBufferPointer(), pixelShaderByteCode_->GetBufferSize(), D3D_BLOB_DEBUG_NAME, 0, pPDBName.GetAddressOf());
+//        struct ShaderDebugName {
+//            uint16_t Flags;      // Reserved, must be set to zero.
+//            uint16_t NameLength; // Length of the debug name, without null terminator.
+//                                 // Followed by NameLength bytes of the UTF-8-encoded name.
+//                                 // Followed by a null terminator.
+//                                 // Followed by [0-3] zero bytes to align to a 4-byte boundary.
+//        };
+//        auto pDebugNameData = reinterpret_cast<const ShaderDebugName*>(pPDBName->GetBufferPointer());
+//        auto pName = reinterpret_cast<const char*>(pDebugNameData + 1);
+//        std::ofstream fout(pName, std::ios::binary);
+//        fout.write((char*)pPDB->GetBufferPointer(), pPDB->GetBufferSize());
+//    }
 
-    res = D3DCompileFromFile(
-      L"MiniTri.fx",
-      pixelMacro.empty() ? nullptr : pixelMacro.data(),
-      nullptr /*include*/,
-      "PSMain",
-      "ps_5_0",
-#if _DEBUG
-      D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION,
-#else
-      D3DCOMPILE_OPTIMIZATION_LEVEL3,
-#endif
-      0,
-      &pixelShaderByteCode_,
-      &errorPixelCode);
+//    if (FAILED(res)) {
+//        // If the shader failed to compile it should have written something to the error message.
+//        if (errorPixelCode) {
+//            char* compileErrors = (char*)(errorPixelCode->GetBufferPointer());
+//
+//            WriteError() << compileErrors << "\n";
+//        }
+//        // If there was  nothing in the error message then it simply could not find the shader file itself.
+//        else {
+//            // MessageBox(display_.hWnd(), L"MiniTri.fx", L"Missing Shader File", MB_OK);
+//            WriteError() << "MiniTri.fx Missing Shader File\n";
+//        }
+//
+//        ::exit(0);
+//    }
+}
 
-    if (FAILED(res)) {
-        // If the shader failed to compile it should have written something to the error message.
-        if (errorPixelCode) {
-            char* compileErrors = (char*)(errorPixelCode->GetBufferPointer());
-
-            WriteError() << compileErrors << "\n";
-        }
-        // If there was  nothing in the error message then it simply could not find the shader file itself.
-        else {
-            // MessageBox(display_.hWnd(), L"MiniTri.fx", L"Missing Shader File", MB_OK);
-            WriteError() << "MiniTri.fx Missing Shader File\n";
-        }
-
-        ::exit(0);
-    }
+long readFileBytes(const char* name, char*& bytes) {
+    std::ifstream fin(name, std::ios::binary);
+    fin.seekg(0, fin.end);
+    int length = fin.tellg();
+    fin.seekg(0, fin.beg);
+    bytes = (char*)malloc(length);
+    fin.read(bytes, length);
+    fin.close();
+    return length;
 }
 
 void TriangleComponent::initialize(ID3D11Device* device) {
     //auto vertexShaderBytecode = reader->ReadData("SimpleVertexShader.cso");
+    char* bytes = { 0 };
+    size_t fSize = readFileBytes("MiniTri1.cso", bytes);
     device->CreateVertexShader(
-      vertexShaderByteCode_->GetBufferPointer(),
-      vertexShaderByteCode_->GetBufferSize(),
+      bytes,
+      fSize,
       nullptr, &vertexShader_);
+    //device->CreateVertexShader(
+    //  vertexShaderByteCode_->GetBufferPointer(),
+    //  vertexShaderByteCode_->GetBufferSize(),
+    //  nullptr, &vertexShader_);
 
+    char* bytes2 = { 0 };
+    size_t fSize2 = readFileBytes("MiniTri2.cso", bytes2);
     device->CreatePixelShader(
-      pixelShaderByteCode_->GetBufferPointer(),
-      pixelShaderByteCode_->GetBufferSize(),
+      bytes2,
+      fSize2,
       nullptr, &pixelShader_);
+    // device->CreatePixelShader(
+    //   pixelShaderByteCode_->GetBufferPointer(),
+    //   pixelShaderByteCode_->GetBufferSize(),
+    //   nullptr, &pixelShader_);
 
     D3D11_INPUT_ELEMENT_DESC inputElements[] = {
         D3D11_INPUT_ELEMENT_DESC{
@@ -132,9 +193,15 @@ void TriangleComponent::initialize(ID3D11Device* device) {
     device->CreateInputLayout(
       inputElements,
       2,
-      vertexShaderByteCode_->GetBufferPointer(),
-      vertexShaderByteCode_->GetBufferSize(),
+      bytes,
+      fSize,
       &layout);
+    //device->CreateInputLayout(
+    //  inputElements,
+    //  2,
+    //  vertexShaderByteCode_->GetBufferPointer(),
+    //  vertexShaderByteCode_->GetBufferSize(),
+    //  &layout);
 
     D3D11_INPUT_ELEMENT_DESC inputElements2[] = {
         D3D11_INPUT_ELEMENT_DESC{
@@ -159,9 +226,16 @@ void TriangleComponent::initialize(ID3D11Device* device) {
     device->CreateInputLayout(
       inputElements2,
       2,
-      vertexShaderByteCode_->GetBufferPointer(),
-      vertexShaderByteCode_->GetBufferSize(),
+      bytes,
+      fSize,
       &layout2);
+    //ID3D11InputLayout* layout2;
+    //device->CreateInputLayout(
+    //  inputElements2,
+    //  2,
+    //  vertexShaderByteCode_->GetBufferPointer(),
+    //  vertexShaderByteCode_->GetBufferSize(),
+    //  &layout2);
 
     int indices[] = { 0, 1, 2 };
 

@@ -224,5 +224,7 @@ void Game::endFrame() {
     //bool s_EnableVSync = true;
     //UINT PresentInterval = s_EnableVSync ? std::min(4, (int)(s_FrameTime * 60.0f)) : 0;
 
-    swapChain1_->Present(0, DXGI_PRESENT_DO_NOT_WAIT);
+    if (swapChain1_->Present(1, /* DXGI_PRESENT_DO_NOT_WAIT*/ 0) == DXGI_ERROR_WAS_STILL_DRAWING) {
+        frameCount_--;
+    }
 }

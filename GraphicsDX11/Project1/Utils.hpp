@@ -57,3 +57,11 @@ using WriteError = DebugWrite<DebugWriteType::ERROR>;
             + "\n";                    \
         ::exit(0);                     \
     }
+
+//inline void ThrowIfFailed(HRESULT hr) {
+//    winrt::throw_hresult(hr);
+//    //if (FAILED(hr)) {
+//    //    // Set a breakpoint on this line to catch Win32 API errors.
+//    //    throw Platform::Exception::CreateException(hr);
+//    //}
+//}
