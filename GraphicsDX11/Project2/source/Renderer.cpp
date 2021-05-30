@@ -6,11 +6,10 @@ Renderer::Renderer(Display const& display)
     : initialized_{ false }
     , frameStarted_{ false }
     , display_{ display }
-    , currentVertexShader{ nullptr }
-    , currentPixelShader{ nullptr } {
+    , currentMaterial_{ nullptr } {
 }
 
-Result<void, RendererError> Renderer::init() {
+RenderResult<void> Renderer::init() {
     if (initialized_) {
         return Err(RendererError{
           .kind = RendererError::Kind::BAD_STATE,
@@ -26,8 +25,8 @@ Result<void, RendererError> Renderer::init() {
     return Ok();
 }
 
-Result<void, RendererError> Renderer::destroy() {
-    if (initialized_) {
+RenderResult<void> Renderer::destroy() {
+    if (!initialized_) {
         return Err(RendererError{
           .kind = RendererError::Kind::BAD_STATE,
           .text = "not initialized" });
@@ -42,8 +41,23 @@ Result<void, RendererError> Renderer::destroy() {
     return Ok();
 }
 
-Result<void, RendererError> Renderer::prepareFrame() {
-    if (initialized_) {
+RenderResult<void> Renderer::runLoop(std::function<void(float)> runFrame) const {
+    if (!initialized_) {
+        return Err(RendererError{
+          .kind = RendererError::Kind::BAD_STATE,
+          .text = "not initialized" });
+    }
+
+    auto res = display_.runLoop(runFrame);
+    if (res.isErr()) {
+        return Err(RendererError::fromDisplayError(res.unwrapErr()));
+    }
+
+    return Ok();
+}
+
+RenderResult<void> Renderer::prepareFrame() const {
+    if (!initialized_) {
         return Err(RendererError{
           .kind = RendererError::Kind::BAD_STATE,
           .text = "not initialized" });
@@ -63,8 +77,8 @@ Result<void, RendererError> Renderer::prepareFrame() {
     return Ok();
 }
 
-Result<void, RendererError> Renderer::endFrame() {
-    if (initialized_) {
+RenderResult<void> Renderer::endFrame() const {
+    if (!initialized_) {
         return Err(RendererError{
           .kind = RendererError::Kind::BAD_STATE,
           .text = "not initialized" });
@@ -76,7 +90,7 @@ Result<void, RendererError> Renderer::endFrame() {
     }
 
     if (!vertices_.empty()) {
-        auto res = draw_(vertices_, colors_, indices_, vertexShader, pixelShader);
+        auto res = draw_(vertices_, colors_, indices_, *currentMaterial_);
         vertices_.clear();
         colors_.clear();
         indices_.clear();
@@ -94,8 +108,12 @@ Result<void, RendererError> Renderer::endFrame() {
     return Ok();
 }
 
-Result<void, RendererError> Renderer::draw(Buffer<Vertex<4>> const& vertices, Buffer<Color<4>> const& colors, Buffer<int> const& indices, VertexShader& vertexShader, PixelShader& pixelShader) {
-    if (initialized_) {
+RenderResult<void> Renderer::draw(
+  Buffer<Vertex> const& vertices,
+  Buffer<Color> const& colors,
+  Buffer<int> const& indices,
+  Material& material) const {
+    if (!initialized_) {
         return Err(RendererError{
           .kind = RendererError::Kind::BAD_STATE,
           .text = "not initialized" });
@@ -106,8 +124,8 @@ Result<void, RendererError> Renderer::draw(Buffer<Vertex<4>> const& vertices, Bu
           .text = "frame not started" });
     }
 
-    if (currentVertexShader != &vertexShader || currentPixelShader != &pixelShader) {
-        auto res = draw_(vertices_, colors_, indices_, vertexShader, pixelShader);
+    if (currentMaterial_ != &material) {
+        auto res = draw_(vertices_, colors_, indices_, material);
         vertices_.clear();
         colors_.clear();
         indices_.clear();

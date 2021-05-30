@@ -12,7 +12,7 @@ RendererDirectX::RendererDirectX(Display const& display)
     : Renderer{ display } {
 }
 
-Result<void, RendererError> RendererDirectX::init_() {
+RenderResult<void> RendererDirectX::init_() {
     {
         auto res = createContext_();
         if (res.isErr()) {
@@ -26,15 +26,15 @@ Result<void, RendererError> RendererDirectX::init_() {
         }
     }
     return Ok();
-    }
+}
 
-Result<void, RendererError> RendererDirectX::destroy_() {
+RenderResult<void> RendererDirectX::destroy_() {
     device_->Release();
     debug_->ReportLiveDeviceObjects(D3D11_RLDO_DETAIL);
     return Ok();
 }
 
-Result<void, RendererError> RendererDirectX::createContext_() {
+RenderResult<void> RendererDirectX::createContext_() {
     auto displaySizeRes = display_.size();
     if (displaySizeRes.isErr()) {
         return Err(RendererError::fromDisplayError(displaySizeRes.unwrapErr()));
@@ -70,7 +70,7 @@ Result<void, RendererError> RendererDirectX::createContext_() {
         .Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH,
     };
 
-    D3D_FEATURE_LEVEL featureLevel[] = { D3D_FEATURE_LEVEL_11_1, D3D_FEATURE_LEVEL_11_0 };
+    D3D_FEATURE_LEVEL featureLevel[] = { D3D_FEATURE_LEVEL_11_0, D3D_FEATURE_LEVEL_11_1 };
     auto res = D3D11CreateDeviceAndSwapChain(
       nullptr,
       D3D_DRIVER_TYPE_HARDWARE,
@@ -132,7 +132,7 @@ Result<void, RendererError> RendererDirectX::createContext_() {
     return Ok();
 }
 
-Result<void, RendererError> RendererDirectX::createBackBuffer_() {
+RenderResult<void> RendererDirectX::createBackBuffer_() {
     auto res = swapChain_->GetBuffer(0, IID_ID3D11Texture2D, (void**)&backBuffer_);
     if (FAILED(res)) {
         return Err(RendererError{
@@ -148,7 +148,7 @@ Result<void, RendererError> RendererDirectX::createBackBuffer_() {
     return Ok();
 }
 
-Result<void, RendererError> RendererDirectX::prepareFrame_() {
+RenderResult<void> RendererDirectX::prepareFrame_() const {
     auto curTime = std::chrono::steady_clock::now();
     float deltaTime = std::chrono::duration_cast<std::chrono::microseconds>(curTime - prevTime_).count() / 1000000.0f;
     prevTime_ = curTime;
@@ -156,7 +156,7 @@ Result<void, RendererError> RendererDirectX::prepareFrame_() {
     totalTime_ += deltaTime;
     frameCount_++;
 
-    if (totalTime_ > 0.1f) {
+    if (totalTime_ > 1.0f) {
         float fps = frameCount_ / totalTime_;
         totalTime_ = 0.0f;
         auto hWndRes = static_cast<DisplayWin32 const&>(display_).hWnd();
@@ -168,13 +168,13 @@ Result<void, RendererError> RendererDirectX::prepareFrame_() {
 
     restoreTargets_();
 
-    Color<4> color{ totalTime_, 0.1f, 0.1f, 1.0f };
-    context_->ClearRenderTargetView(renderView_, color.data());
+    Color color{ totalTime_, 0.1f, 0.1f, 1.0f };
+    context_->ClearRenderTargetView(renderView_, reinterpret_cast<float*>(&color));
 
     return Ok();
 }
 
-Result<void, RendererError> RendererDirectX::endFrame_() {
+RenderResult<void> RendererDirectX::endFrame_() const {
     //bool s_EnableVSync = true;
     //UINT PresentInterval = s_EnableVSync ? std::min(4, (int)(s_FrameTime * 60.0f)) : 0;
 
@@ -190,12 +190,16 @@ Result<void, RendererError> RendererDirectX::endFrame_() {
     return Ok();
 }
 
-Result<void, RendererError> RendererDirectX::restoreTargets_() {
+RenderResult<void> RendererDirectX::restoreTargets_() const {
     context_->OMSetRenderTargets(1, &renderView_, nullptr);
     return Ok();
 }
 
-Result<void, RendererError> RendererDirectX::draw_(Buffer<Vertex<4>> const& vertices, Buffer<Color<4>> const& colors, Buffer<int> const& indices, VertexShader& vertexShader, PixelShader& pixelShader) {
+RenderResult<void> RendererDirectX::draw_(
+  Buffer<Vertex> const& vertices,
+  Buffer<Color> const& colors,
+  Buffer<int> const& indices,
+  Material& material) const {
 
     return Ok();
 }

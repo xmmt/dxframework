@@ -6,7 +6,7 @@ Display::Display(InputDevice& inputDevice)
     : inputDevice_{ inputDevice } {
 }
 
-Result<void, DisplayError> Display::addOnSizeUpdatedCallback(std::function<void(Size)> callback) {
+DisplayResult<void> Display::addOnSizeUpdatedCallback(std::function<void(Size)> callback) {
     onSizeUpdatedCallbacks_.emplace_back(std::move(callback));
     return Ok();
 }

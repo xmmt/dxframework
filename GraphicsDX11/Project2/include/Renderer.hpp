@@ -2,7 +2,9 @@
 
 #include <Display.hpp>
 #include <Utils.hpp>
-#include <Shader.hpp>
+#include <Material.hpp>
+
+#include <DirectXMath.h>
 
 namespace GraphicsFramework {
 
@@ -28,41 +30,53 @@ struct RendererError {
 };
 
 template <typename T>
+using RenderResult = Result<T, RendererError>;
+
+template <typename T>
 using Buffer = std::vector<T>;
 
-template <size_t N>
-using Vertex = std::array<float, N>;
+// using Vertex = std::array<float, 4>;
+using Vertex = DirectX::XMFLOAT4;
 
-template <size_t N>
-using Color = std::array<float, N>;
+// using Color = std::array<float, N>;
+using Color = DirectX::XMFLOAT4;
 
 class Renderer {
 public:
     Renderer(Display const& display);
+    virtual ~Renderer() = default;
 
 public:
-    virtual Result<void, RendererError> init();
-    virtual Result<void, RendererError> destroy();
-    virtual Result<void, RendererError> prepareFrame();
-    virtual Result<void, RendererError> endFrame();
-    virtual Result<void, RendererError> draw(Buffer<Vertex<4>> const& vertices, Buffer<Color<4>> const& colors, Buffer<int> const& indices, VertexShader& vertexShader, PixelShader& pixelShader);
+    virtual RenderResult<void> init();
+    virtual RenderResult<void> destroy();
+    virtual RenderResult<void> runLoop(std::function<void(float)> runFrame) const;
+    virtual RenderResult<void> prepareFrame() const;
+    virtual RenderResult<void> endFrame() const;
+    virtual RenderResult<void> draw(
+      Buffer<Vertex> const& vertices,
+      Buffer<Color> const& colors,
+      Buffer<int> const& indices,
+      Material& material) const;
 
 protected:
-    virtual Result<void, RendererError> init_() = 0;
-    virtual Result<void, RendererError> destroy_() = 0;
-    virtual Result<void, RendererError> prepareFrame_() = 0;
-    virtual Result<void, RendererError> endFrame_() = 0;
-    virtual Result<void, RendererError> draw_(Buffer<Vertex<4>> const& vertices, Buffer<Color<4>> const& colors, Buffer<int> const& indices, VertexShader& vertexShader, PixelShader& pixelShader) = 0;
+    virtual RenderResult<void> init_() = 0;
+    virtual RenderResult<void> destroy_() = 0;
+    virtual RenderResult<void> prepareFrame_() const = 0;
+    virtual RenderResult<void> endFrame_() const = 0;
+    virtual RenderResult<void> draw_(
+      Buffer<Vertex> const& vertices,
+      Buffer<Color> const& colors,
+      Buffer<int> const& indices,
+      Material& material) const = 0;
 
 protected:
     bool initialized_{ false };
-    bool frameStarted_{ false };
+    mutable bool frameStarted_{ false };
     Display const& display_;
-    VertexShader* currentVertexShader{ nullptr };
-    PixelShader* currentPixelShader{ nullptr };
-    Buffer<Vertex<4>> vertices_;
-    Buffer<Color<4>> colors_;
-    Buffer<int> indices_;
+    Material* currentMaterial_{ nullptr };
+    mutable Buffer<Vertex> vertices_;
+    mutable Buffer<Color> colors_;
+    mutable Buffer<int> indices_;
 };
 
 } // namespace GraphicsFramework

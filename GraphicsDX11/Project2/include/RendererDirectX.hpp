@@ -22,25 +22,22 @@ namespace GraphicsFramework {
 class RendererDirectX : public Renderer {
 public:
     RendererDirectX(Display const& display);
-    virtual ~RendererDirectX() = default;
-
-public:
-    //Result<void, RendererError> init() override;
-    //Result<void, RendererError> destroy() override;
-    //Result<void, RendererError> prepareFrame() override;
-    //Result<void, RendererError> endFrame() override;
-    //Result<void, RendererError> draw(Buffer<Vertex<4>> const& vertices, Buffer<Color<4>> const& colors, VertexShader& vertexShader, PixelShader& pixelShader) override;
+    ~RendererDirectX() override = default;
 
 private:
-    Result<void, RendererError> init_() override;
-    Result<void, RendererError> destroy_() override;
-    Result<void, RendererError> prepareFrame_() override;
-    Result<void, RendererError> endFrame_() override;
-    Result<void, RendererError> draw_(Buffer<Vertex<4>> const& vertices, Buffer<Color<4>> const& colors, Buffer<int> const& indices, VertexShader& vertexShader, PixelShader& pixelShader) override;
+    RenderResult<void> init_() override;
+    RenderResult<void> destroy_() override;
+    RenderResult<void> prepareFrame_() const override;
+    RenderResult<void> endFrame_() const override;
+    RenderResult<void> draw_(
+      Buffer<Vertex> const& vertices,
+      Buffer<Color> const& colors,
+      Buffer<int> const& indices,
+      Material& material) const override;
 
-    Result<void, RendererError> createContext_();
-    Result<void, RendererError> createBackBuffer_();
-    Result<void, RendererError> restoreTargets_();
+    RenderResult<void> createContext_();
+    RenderResult<void> createBackBuffer_();
+    RenderResult<void> restoreTargets_() const;
 
 private:
     Microsoft::WRL::ComPtr<ID3D11Device> device_;
@@ -54,10 +51,10 @@ private:
     ID3D11RenderTargetView* renderView_;
     ID3D11Texture2D* backBuffer_;
 
-    std::chrono::time_point<std::chrono::steady_clock> prevTime_;
+    mutable std::chrono::time_point<std::chrono::steady_clock> prevTime_;
     int startTime_;
-    float totalTime_{ 0 };
-    unsigned int frameCount_{ 0 };
+    mutable float totalTime_{ 0 };
+    mutable unsigned int frameCount_{ 0 };
 };
 
 } // namespace GraphicsFramework

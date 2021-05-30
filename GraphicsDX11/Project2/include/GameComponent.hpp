@@ -14,17 +14,20 @@ struct GameComponentError {
     std::string text;
 };
 
+template <typename T>
+using GameCompResult = Result<T, GameComponentError>;
+
 class GameComponent {
 public:
     GameComponent(Renderer& renderer);
-    virtual ~GameComponent() = 0;
+    virtual ~GameComponent() = default;
 
 public:
-    virtual Result<void, GameComponentError> destroyResources() = 0;
-    virtual Result<void, GameComponentError> draw() = 0;
-    virtual Result<void, GameComponentError> initialize() = 0;
-    virtual Result<void, GameComponentError> reload() = 0;
-    virtual Result<void, GameComponentError> update() = 0;
+    virtual GameCompResult<void> destroyResources() = 0;
+    virtual GameCompResult<void> draw() = 0;
+    virtual GameCompResult<void> initialize() = 0;
+    virtual GameCompResult<void> reload() = 0;
+    virtual GameCompResult<void> update() = 0;
 
 protected:
     Renderer& renderer_;

@@ -2,31 +2,31 @@
 
 using namespace GraphicsFramework;
 
-Result<void, InputDeviceError>
+InDeviceResult<void>
 InputDevice::addOnKeyPressedCallback(Key key, std::function<void()> callback) {
     onKeyPressedCallbacks_.emplace(key, std::move(callback));
     return Ok();
 }
 
-Result<void, InputDeviceError>
+InDeviceResult<void>
 InputDevice::addOnKeyReleasedCallback(Key key, std::function<void()> callback) {
     onKeyReleasedCallbacks_.emplace(key, std::move(callback));
     return Ok();
 }
 
-Result<void, InputDeviceError>
+InDeviceResult<void>
 InputDevice::addOnMouseMoveCallback(std::function<void(MousePosition)> callback) {
     onMouseMove_ = std::move(callback);
     return Ok();
 }
 
-Result<void, InputDeviceError>
+InDeviceResult<void>
 InputDevice::setKeyStateGetter(std::function<bool(Key)> callback) {
     keyStateGetter_ = std::move(callback);
     return Ok();
 }
 
-Result<void, InputDeviceError>
+InDeviceResult<void>
 InputDevice::setMousePositionGetter(std::function<std::tuple<int, int>()> callback) {
     mousePositionGetter_ = std::move(callback);
     return Ok();
@@ -52,7 +52,7 @@ void InputDevice::onMouseMove(MousePosition position) const {
     }
 }
 
-Result<bool, InputDeviceError> InputDevice::isKeyPressed(Key key) const {
+InDeviceResult<bool> InputDevice::isKeyPressed(Key key) const {
     if (keyStateGetter_) {
         return Ok(keyStateGetter_(key));
     }
@@ -61,7 +61,7 @@ Result<bool, InputDeviceError> InputDevice::isKeyPressed(Key key) const {
       .text = "onKeyState callback is not set" });
 }
 
-Result<std::tuple<int, int>, InputDeviceError> InputDevice::getMousePosition() const {
+InDeviceResult<std::tuple<int, int>> InputDevice::getMousePosition() const {
     if (mousePositionGetter_) {
         return Ok(mousePositionGetter_());
     }

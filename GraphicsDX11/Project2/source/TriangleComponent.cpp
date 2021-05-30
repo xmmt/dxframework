@@ -2,31 +2,38 @@
 
 using namespace GraphicsFramework;
 
-TriangleComponent::TriangleComponent(Renderer& renderer, Buffer<Vertex<4>> vertices, Buffer<Color<4>> colors, VertexShader& vertexShader, PixelShader& pixelShader)
+TriangleComponent::TriangleComponent(
+  Renderer& renderer,
+  Buffer<Vertex> vertices,
+  Buffer<Color> colors,
+  Material& material)
     : GameComponent{ renderer }
     , vertices_{ std::move(vertices) }
     , colors_{ std::move(colors) }
-    , vertexShader_{ vertexShader }
-    , pixelShader_{ pixelShader } {
+    , indices_{ 0, 1, 2 }
+    , material_{ material } {
 }
 
-Result<void, GameComponentError> TriangleComponent::destroyResources() {
+TriangleComponent::~TriangleComponent() {
+}
+
+GameCompResult<void> TriangleComponent::destroyResources() {
     return Ok();
 }
 
-Result<void, GameComponentError> TriangleComponent::draw() {
-    renderer_.draw(vertices_, colors_, vertexShader_, pixelShader_);
+GameCompResult<void> TriangleComponent::draw() {
+    renderer_.draw(vertices_, colors_, indices_, material_);
     return Ok();
 }
 
-Result<void, GameComponentError> TriangleComponent::initialize() {
+GameCompResult<void> TriangleComponent::initialize() {
     return Ok();
 }
 
-Result<void, GameComponentError> TriangleComponent::reload() {
+GameCompResult<void> TriangleComponent::reload() {
     return Ok();
 }
 
-Result<void, GameComponentError> TriangleComponent::update() {
+GameCompResult<void> TriangleComponent::update() {
     return Ok();
 }

@@ -46,14 +46,14 @@ int WINAPI WinMain(
 #endif // _WIN32
 
     Triangles triangles{ renderer, inputDevice };
+    renderer.init().expect("can not init renderer");
+    triangles.init().expect("can not init trinagles game");
 
     auto res = triangles.run();
 
     if (res.isErr()) {
         Utils::DebugWrite::error("ERROR: Game \"{}\" was finished with error {}\n", "Triangles", res.unwrapErr().text);
     }
-
-    Sleep(5000);
 
     return 0;
 }

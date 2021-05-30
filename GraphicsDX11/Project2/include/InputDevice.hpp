@@ -14,6 +14,9 @@ struct InputDeviceError {
     std::string text;
 };
 
+template <typename T>
+using InDeviceResult = Result<T, InputDeviceError>;
+
 class InputDevice {
 public:
     enum class Key : size_t {
@@ -40,11 +43,11 @@ public:
     };
 
 public:
-    Result<void, InputDeviceError> addOnKeyPressedCallback(Key key, std::function<void()> callback);
-    Result<void, InputDeviceError> addOnKeyReleasedCallback(Key key, std::function<void()> callback);
-    Result<void, InputDeviceError> addOnMouseMoveCallback(std::function<void(MousePosition)> callback);
-    Result<void, InputDeviceError> setKeyStateGetter(std::function<bool(Key)> callback);
-    Result<void, InputDeviceError> setMousePositionGetter(std::function<std::tuple<int, int>()> callback);
+    InDeviceResult<void> addOnKeyPressedCallback(Key key, std::function<void()> callback);
+    InDeviceResult<void> addOnKeyReleasedCallback(Key key, std::function<void()> callback);
+    InDeviceResult<void> addOnMouseMoveCallback(std::function<void(MousePosition)> callback);
+    InDeviceResult<void> setKeyStateGetter(std::function<bool(Key)> callback);
+    InDeviceResult<void> setMousePositionGetter(std::function<std::tuple<int, int>()> callback);
 
 public:
     void onKeyPressed(Key key) const;
@@ -52,8 +55,8 @@ public:
     void onMouseMove(MousePosition position) const;
 
 public:
-    Result<bool, InputDeviceError> isKeyPressed(Key key) const;
-    Result<std::tuple<int, int>, InputDeviceError> getMousePosition() const;
+    InDeviceResult<bool> isKeyPressed(Key key) const;
+    InDeviceResult<std::tuple<int, int>> getMousePosition() const;
 
 private:
     std::unordered_multimap<Key, std::function<void()>> onKeyPressedCallbacks_;

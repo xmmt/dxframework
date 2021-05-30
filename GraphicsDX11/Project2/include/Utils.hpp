@@ -10,6 +10,9 @@ namespace Utils {
 
 class DebugWrite {
 public:
+    DebugWrite() = delete;
+
+public:
     template <typename... Args>
     static void info(Args&&... args) {
         info_(std::format(std::forward<Args>(args)...));

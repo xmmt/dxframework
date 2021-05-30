@@ -138,7 +138,9 @@ DisplayWin32::DisplayWin32(std::string title, HINSTANCE hInstance, InputDevice& 
         res = ScreenToClient(hWnd, &point);
         return std::tuple<int, int>{ point.x, point.y };
     });
+}
 
+DisplayResult<void> DisplayWin32::runLoop(std::function<void(float)> runFrame) const {
     MSG msg_;
     bool isExitRequested_{ false };
     // Loop until there is a quit message from the window or the user.
@@ -154,10 +156,13 @@ DisplayWin32::DisplayWin32(std::string title, HINSTANCE hInstance, InputDevice& 
             isExitRequested_ = true;
         }
 
+        runFrame(0.f);
+
         // Utils::DebugWrite::info("mouse {} {}\n", std::get<0>(inputDevice_.getMousePosition().unwrap()), std::get<1>(inputDevice_.getMousePosition().unwrap()));
         //auto id = std::this_thread::get_id();
         //std::cout << "Main id: " << id << "\n";
     }
+    return Ok();
 }
 
 LRESULT CALLBACK DisplayWin32::wndProc_(HWND hWnd, UINT uMessage, WPARAM wParam, LPARAM lParam) {
@@ -252,7 +257,7 @@ LRESULT CALLBACK DisplayWin32::wndProc_(HWND hWnd, UINT uMessage, WPARAM wParam,
     }
 }
 
-Result<DisplayWin32::Size, DisplayError> DisplayWin32::size() const {
+DisplayResult<DisplayWin32::Size> DisplayWin32::size() const {
     RECT rect;
     if (!GetWindowRect(hWnd_, &rect)) {
         return Err(DisplayError{
@@ -264,19 +269,19 @@ Result<DisplayWin32::Size, DisplayError> DisplayWin32::size() const {
       .height = static_cast<std::uint32_t>(rect.bottom - rect.top) });
 }
 
-Result<void, DisplayError> DisplayWin32::show() {
+DisplayResult<void> DisplayWin32::show() {
     return Err(DisplayError{
       .kind = DisplayError::Kind::UNDEFINED,
       .text = "not implemented" });
 }
 
-Result<void, DisplayError> DisplayWin32::setTitle(std::string title) {
+DisplayResult<void> DisplayWin32::setTitle(std::string title) {
     return Err(DisplayError{
       .kind = DisplayError::Kind::UNDEFINED,
       .text = "not implemented" });
 }
 
-Result<HWND, DisplayError> DisplayWin32::hWnd() const {
+DisplayResult<HWND> DisplayWin32::hWnd() const {
     if (hWnd_ == 0) {
         return Err(DisplayError{
           .kind = DisplayError::Kind::BAD_STATE,

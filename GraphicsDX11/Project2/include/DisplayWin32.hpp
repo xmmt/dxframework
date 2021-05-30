@@ -8,12 +8,15 @@ namespace GraphicsFramework {
 class DisplayWin32 : public Display {
 public:
     DisplayWin32(std::string title, HINSTANCE hInstance, InputDevice& inputDevice);
-    virtual ~DisplayWin32() = default;
+    ~DisplayWin32() override = default;
 
 public:
-    virtual Result<Size, DisplayError> size() const override;
-    virtual Result<void, DisplayError> show() override;
-    virtual Result<void, DisplayError> setTitle(std::string title) override;
+    DisplayResult<void> runLoop(std::function<void(float)> runFrame) const override;
+
+public:
+    DisplayResult<Size> size() const override;
+    DisplayResult<void> show() override;
+    DisplayResult<void> setTitle(std::string title) override;
 
     Result<HWND, DisplayError> hWnd() const;
 

@@ -6,31 +6,24 @@ Triangles::Triangles(Renderer const& renderer, InputDevice const& inputDevice)
     : Game{ renderer, inputDevice } {
 }
 
-Result<void, GameError> Triangles::run() {
-    if (!initialized_) {
-        return Err(GameError{
-          .kind = GameError::Kind::BAD_STATE,
-          .text = "not initialized" });
-    }
+GameResult<void> Triangles::runFrame_(float delta) {
+    renderer_.prepareFrame();
+    renderer_.endFrame();
     return Ok();
 }
 
-Result<void, GameError> Triangles::init() {
-    if (initialized_) {
-        return Err(GameError{
-          .kind = GameError::Kind::BAD_STATE,
-          .text = "already initialized" });
-    }
-    initialized_ = true;
+GameResult<void> Triangles::run_() {
+    // renderer_.prepareFrame();
+    // renderer_.endFrame();
     return Ok();
 }
 
-Result<void, GameError> Triangles::destroy() {
-    if (!initialized_) {
-        return Err(GameError{
-          .kind = GameError::Kind::BAD_STATE,
-          .text = "not initialized" });
-    }
-    initialized_ = false;
+GameResult<void> Triangles::init_() {
+
+    return Ok();
+}
+
+GameResult<void> Triangles::destroy_() {
+
     return Ok();
 }

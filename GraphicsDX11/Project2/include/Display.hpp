@@ -16,6 +16,9 @@ struct DisplayError {
     std::string text;
 };
 
+template <typename T>
+using DisplayResult = Result<T, DisplayError>;
+
 class Display {
 public:
     struct Size {
@@ -28,9 +31,12 @@ public:
     virtual ~Display() = default;
 
 public:
-    virtual Result<Size, DisplayError> size() const = 0;
-    virtual Result<void, DisplayError> show() = 0;
-    virtual Result<void, DisplayError> setTitle(std::string title) = 0;
+    virtual DisplayResult<void> runLoop(std::function<void(float)> runFrame) const = 0;
+
+public:
+    virtual DisplayResult<Size> size() const = 0;
+    virtual DisplayResult<void> show() = 0;
+    virtual DisplayResult<void> setTitle(std::string title) = 0;
 
 public:
     virtual Result<void, DisplayError> addOnSizeUpdatedCallback(std::function<void(Size)> callback);
