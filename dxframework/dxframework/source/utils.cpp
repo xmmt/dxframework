@@ -20,10 +20,10 @@ void debug_write::error_(std::string_view const s) {
 
 void enable_console() {
     AllocConsole();
-    FILE* fDummy;
-    freopen_s(&fDummy, "CONIN$", "r", stdin);
-    freopen_s(&fDummy, "CONOUT$", "w", stderr);
-    freopen_s(&fDummy, "CONOUT$", "w", stdout);
+    FILE* f_dummy;
+    freopen_s(&f_dummy, "CONIN$", "r", stdin);
+    freopen_s(&f_dummy, "CONOUT$", "w", stderr);
+    freopen_s(&f_dummy, "CONOUT$", "w", stdout);
 }
 
 } // namespace utils

@@ -1,0 +1,158 @@
+# Blender MTL File: 'guitar.blend'
+# Material Count: 13
+
+newmtl body1
+Ns 562.983352
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.007351 0.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd textures/body1-texture.png
+map_Ns textures/body1-2-3-roughness.png
+
+newmtl body2
+Ns 562.983352
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.007351 0.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd textures/body2-texture.png
+map_Ns textures/body1-2-3-roughness.png
+
+newmtl body3
+Ns 562.983352
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.007351 0.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd textures/body3-texture.png
+map_Ns textures/body1-2-3-roughness.png
+
+newmtl body_facets_guitar
+Ns 562.983352
+Ka 1.000000 1.000000 1.000000
+Kd 0.040915 0.042311 0.046665
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd textures/body-facets-guitar-texture.png
+map_Ns textures/body-all-roughness.png
+
+newmtl bridge
+Ns 562.983352
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.007351 0.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd textures/bridge-texture.png
+map_Ns textures/roughness-body-neck-bridge-.png
+
+newmtl bridge-pins-saddle-nut
+Ns 518.597096
+Ka 1.000000 1.000000 1.000000
+Kd 0.745404 0.701102 0.462077
+Ks 0.700000 0.700000 0.700000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd textures/bridge-pins-saddle-nut-texture.png
+map_Ns textures/bridge-pins-saddle-nut-roughness.png
+
+newmtl frets
+Ns 225.000000
+Ka 0.768182 0.768182 0.768182
+Kd 0.539480 0.539480 0.539480
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 3
+map_Kd textures/frets-texture.png
+map_Ns textures/frets-roughness.png
+
+newmtl neck-head
+Ns 562.983352
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.007351 0.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd textures/neck-head-texture.png
+map_Ns textures/roughness-body-(neck-head)-bridge.png
+
+newmtl neck2
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.007351 0.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd textures/neck2-texture.png
+map_Ns textures/neck2-roughness.png
+
+newmtl pattern
+Ns 309.439996
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd textures/pattern-texture.png
+map_Ns textures/pattern-roughness.png
+
+newmtl string1-2-3-4
+Ns 359.274786
+Ka 0.695455 0.695455 0.695455
+Kd 0.630758 0.502886 0.171441
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 3
+map_Kd textures/1-2-3-4string-texture.png
+map_Ns textures/1-2-3-4-5-6-string-roughness.png
+
+newmtl string5-6
+Ns 359.274786
+Ka 0.695455 0.695455 0.695455
+Kd 0.520996 0.520995 0.520996
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 3
+map_Kd textures/5-6-string-texture.png
+map_Ns textures/1-2-3-4-5-6-string-roughness.png
+
+newmtl tuning
+Ns 390.960741
+Ka 0.900000 0.900000 0.900000
+Kd 1.000000 1.000000 1.000000
+Ks 0.840909 0.840909 0.840909
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 3
+map_Kd textures/tuning-texture.png
+map_Ns textures/tuning-roughness.png

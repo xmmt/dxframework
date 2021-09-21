@@ -1,0 +1,8 @@
+[submodule "dxframework/thirdparty/DirectXTK"]
+	path = dxframework/thirdparty/DirectXTK
+	url = https://github.com/microsoft/DirectXTK.git
+	branch = master
+[submodule "dxframework/thirdparty/assimp"]
+	path = dxframework/thirdparty/assimp
+	url = https://github.com/assimp/assimp.git
+	branch = master
