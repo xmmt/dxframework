@@ -1,6 +1,7 @@
 #pragma once
 
 #include <dxframework/game_component.hpp>
+#include <dxframework/transform.hpp>
 
 namespace dxframework {
 
@@ -14,7 +15,7 @@ public:
 
 public:
     void destroy_resources() override;
-    void draw() override;
+    void draw(DirectX::XMMATRIX const& view_projection_matrix) override;
     void initialize() override;
     void reload() override;
     void update() override;
@@ -25,6 +26,8 @@ private:
     buffer<int> indices_{ 0, 1, 2 };
     static pixel_shader ps_;
     static vertex_shader vs_;
+    static constant_buffer<CB_VS_vertexshader> cb_;
+    transform transform_{ DirectX::SimpleMath::Vector3{} };
 };
 
 } // namespace dxframework

@@ -92,7 +92,8 @@ void renderer::end_frame() const {
 void renderer::draw(
   buffer<vertex>& vertices,
   buffer<color>& colors,
-  buffer<int>& indices) const {
+  buffer<int>& indices,
+  DirectX::XMMATRIX const& view_projection_matrix) const {
     if (!initialized_) {
         throw std::runtime_error("renderer is not initialized");
     }

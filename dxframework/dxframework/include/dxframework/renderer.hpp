@@ -44,9 +44,18 @@ public:
     void draw(
       buffer<vertex>& vertices,
       buffer<color>& colors,
-      buffer<int>& indices) const;
+      buffer<int>& indices,
+      DirectX::XMMATRIX const& view_projection_matrix) const;
     void set_shaders(vertex_shader& vs, pixel_shader& ps);
     void init_shaders(vertex_shader& vs, pixel_shader& ps);
+
+public:
+    auto get_device() {
+        return device_.Get();
+    }
+    auto get_context() {
+        return context_;
+    }
 
 private:
     void create_context_();

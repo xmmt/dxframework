@@ -17,6 +17,8 @@ camera::camera()
     , pos_vector_{ XMLoadFloat3(&pos_) }
     , rot_{ 0.f, 0.f, 0.f }
     , rot_vector_{ XMLoadFloat3(&rot_) } {
+    pos_vector_ = XMLoadFloat3(&pos_);
+    rot_vector_ = XMLoadFloat3(&rot_);
     update_view_matrix_();
 }
 

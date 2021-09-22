@@ -12,6 +12,7 @@ set(HEADERS
     include/dxframework/display.hpp
     include/dxframework/game.hpp
     include/dxframework/game_component.hpp
+    include/dxframework/guitar_component.hpp
     include/dxframework/input_device.hpp
     include/dxframework/mesh.hpp
     include/dxframework/model.hpp
@@ -32,6 +33,7 @@ set(SOURCES
     source/display.cpp
     source/game.cpp
     source/game_component.cpp
+    source/guitar_component.cpp
     source/input_device.cpp
     source/main.cpp
     source/mesh.cpp

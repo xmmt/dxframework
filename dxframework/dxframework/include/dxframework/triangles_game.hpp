@@ -2,6 +2,7 @@
 
 #include <dxframework/game.hpp>
 #include <dxframework/game_component.hpp>
+#include <dxframework/camera.hpp>
 
 namespace dxframework {
 
@@ -18,6 +19,10 @@ private:
 
 private:
     std::vector<std::shared_ptr<game_component>> components_;
+    camera camera_;
+    float input_x_axis_{ 0.f };
+    float input_y_axis_{ 0.f };
+    float cam_speed_{ 0.04f };
 };
 
 } // namespace dxframework

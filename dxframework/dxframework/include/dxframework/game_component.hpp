@@ -12,7 +12,7 @@ public:
 
 public:
     virtual void destroy_resources() = 0;
-    virtual void draw() = 0;
+    virtual void draw(DirectX::XMMATRIX const& view_projection_matrix) = 0;
     virtual void initialize() = 0;
     virtual void reload() = 0;
     virtual void update() = 0;
