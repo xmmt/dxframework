@@ -34,6 +34,13 @@ private:
 
 void enable_console();
 
+class converter {
+public:
+    static std::wstring string_to_wide(std::string str);
+    static std::string get_directory_from_path(std::string const& file_path);
+    static std::string get_file_extension(std::string const& file_name);
+};
+
 } // namespace utils
 
 class com_exception : public std::exception {

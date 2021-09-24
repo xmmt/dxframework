@@ -10,7 +10,7 @@ public:
     triangle_component(
       renderer& renderer,
       buffer<vertex> vertices,
-      buffer<color> colors);
+      buffer<color_t> colors);
     ~triangle_component() override;
 
 public:
@@ -20,9 +20,12 @@ public:
     void reload() override;
     void update() override;
 
+public:
+    transform& get_transform();
+
 private:
     buffer<vertex> vertices_;
-    buffer<color> colors_;
+    buffer<color_t> colors_;
     buffer<int> indices_{ 0, 1, 2 };
     static pixel_shader ps_;
     static vertex_shader vs_;

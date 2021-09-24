@@ -83,7 +83,7 @@ private:
 
 namespace colors {
 
-constexpr const color unloaded_texture_color(std::byte{ 100 }, std::byte{ 100 }, std::byte{ 100 }, std::byte{ 100 });
+constexpr const color unloaded_texture_color(std::byte{ 0 }, std::byte{ 100 }, std::byte{ 0 }, std::byte{ 100 });
 constexpr const color unhandled_texture_color(250, 0, 0);
 
 } // namespace colors

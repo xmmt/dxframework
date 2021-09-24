@@ -18,12 +18,12 @@ texture::texture(ID3D11Device* device, color const* color_data, uint32_t width, 
 texture::texture(ID3D11Device* device, std::string const& file_path, aiTextureType type) {
     type_ = type;
 
-    //if (StringConverter::GetFileExtension(file_path) == ".dds") {
-    if (FAILED(CreateDDSTextureFromFile(device, /* StringConverter::StringToWide(filePath).c_str() */ std::wstring(file_path.begin(), file_path.end()).c_str(), texture_.GetAddressOf(), texture_view_.GetAddressOf()))) {
-        initialize_1x1_color_texture(device, colors::unloaded_texture_color, type);
+    if (utils::converter::get_file_extension(file_path) == ".dds") {
+        if (FAILED(CreateDDSTextureFromFile(device, /* StringConverter::StringToWide(filePath).c_str() */ std::wstring(file_path.begin(), file_path.end()).c_str(), texture_.GetAddressOf(), texture_view_.GetAddressOf()))) {
+            initialize_1x1_color_texture(device, colors::unloaded_texture_color, type);
+        }
+        return;
     }
-    return;
-    //}
 
     if (FAILED(CreateWICTextureFromFile(device, /* StringConverter::StringToWide(filePath).c_str() */ std::wstring(file_path.begin(), file_path.end()).c_str(), texture_.GetAddressOf(), texture_view_.GetAddressOf()))) {
 

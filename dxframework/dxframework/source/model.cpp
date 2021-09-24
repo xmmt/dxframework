@@ -9,8 +9,8 @@ bool model::init(std::string const& file_path, ID3D11Device* device, ID3D11Devic
     cb_vs_vertexshader_ = &cb_vs_vertexshader;
 
     //try {
-    //    if (!load_model_(file_path))
-    //        return false;
+        if (!load_model_(file_path))
+            return false;
     //} catch (COMException& exception) {
     //    ErrorLogger::Log(exception);
     //    return false;
@@ -31,7 +31,7 @@ void model::draw(XMMATRIX const& world_matrix, XMMATRIX const& view_projection_m
 }
 
 bool model::load_model_(std::string const& file_path) {
-    directory_ = file_path; //StringConverter::GetDirectoryFromPath(filePath);
+    directory_ = utils::converter::get_directory_from_path(file_path) + '/';
 
     Assimp::Importer importer;
 
@@ -70,9 +70,15 @@ mesh model::process_mesh_(aiMesh* mesh, aiScene const* scene, XMMATRIX const& tr
         vertex.pos.y = mesh->mVertices[i].y;
         vertex.pos.z = mesh->mVertices[i].z;
 
-        vertex.normal.x = mesh->mNormals[i].x;
-        vertex.normal.y = mesh->mNormals[i].y;
-        vertex.normal.z = mesh->mNormals[i].z;
+        if (mesh->mNormals) {
+            vertex.normal.x = mesh->mNormals[i].x;
+            vertex.normal.y = mesh->mNormals[i].y;
+            vertex.normal.z = mesh->mNormals[i].z;
+        } else {
+            vertex.normal.x = 0.f;
+            vertex.normal.y = 1.f;
+            vertex.normal.z = 0.f;
+        }
 
         if (mesh->mTextureCoords[0]) {
             vertex.tex_coord.x = (float)mesh->mTextureCoords[0][i].x;
@@ -158,7 +164,7 @@ std::vector<texture> model::load_material_textures_(aiMaterial* p_material, aiTe
             texture_storage_type storetype = determine_texture_storage_type_(p_scene, p_material, i, texture_type);
             switch (storetype) {
             case texture_storage_type::DISK: {
-                std::string filename = directory_ + '\\' + path.C_Str();
+                std::string filename = directory_ /* + '\\'*/ + path.C_Str();
                 texture disk_texture(device_, filename, texture_type);
                 material_textures.push_back(disk_texture);
                 break;

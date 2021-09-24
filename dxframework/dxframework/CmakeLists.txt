@@ -10,6 +10,8 @@ set(HEADERS
     include/dxframework/color.hpp
     include/dxframework/constant_buffer_types.hpp
     include/dxframework/display.hpp
+    include/dxframework/fruit_component.hpp
+    include/dxframework/floor_component.hpp
     include/dxframework/game.hpp
     include/dxframework/game_component.hpp
     include/dxframework/guitar_component.hpp
@@ -18,6 +20,7 @@ set(HEADERS
     include/dxframework/model.hpp
     include/dxframework/renderer.hpp
     include/dxframework/shader.hpp
+    include/dxframework/sphere_component.hpp
     include/dxframework/texture.hpp
     include/dxframework/timer.hpp
     include/dxframework/transform.hpp
@@ -31,6 +34,8 @@ set(HEADERS
 set(SOURCES
     source/camera.cpp
     source/display.cpp
+    source/floor_component.cpp
+    source/fruit_component.cpp
     source/game.cpp
     source/game_component.cpp
     source/guitar_component.cpp
@@ -40,6 +45,7 @@ set(SOURCES
     source/model.cpp
     source/renderer.cpp
     source/shader.cpp
+    source/sphere_component.cpp
     source/texture.cpp
     source/timer.cpp
     source/transform.cpp
@@ -48,7 +54,7 @@ set(SOURCES
     source/utils.cpp
 )
 
-add_executable(${PROJECT_NAME} WIN32 ${HEADERS} ${SOURCES})
+add_executable(${PROJECT_NAME} WIN32 ${HEADERS} ${SOURCES} DeclareDPIAware.manifest)
 
 target_include_directories(${PROJECT_NAME} PRIVATE include)
 #target_include_directories(${PROJECT_NAME} PRIVATE "../thirdparty/DirectXTK/Inc")

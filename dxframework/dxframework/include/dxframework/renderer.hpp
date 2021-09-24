@@ -28,7 +28,7 @@ using buffer = std::vector<T>;
 using vertex = DirectX::XMFLOAT4;
 
 // using Color = std::array<float, N>;
-using color = DirectX::XMFLOAT4;
+using color_t = DirectX::XMFLOAT4;
 
 class renderer {
 public:
@@ -43,11 +43,10 @@ public:
     void end_frame() const;
     void draw(
       buffer<vertex>& vertices,
-      buffer<color>& colors,
+      buffer<color_t>& colors,
       buffer<int>& indices,
       DirectX::XMMATRIX const& view_projection_matrix) const;
     void set_shaders(vertex_shader& vs, pixel_shader& ps);
-    void init_shaders(vertex_shader& vs, pixel_shader& ps);
 
 public:
     auto get_device() {
@@ -67,7 +66,7 @@ private:
     mutable bool frame_started_{ false };
     display const& display_;
     mutable buffer<vertex> vertices_;
-    mutable buffer<color> colors_;
+    mutable buffer<color_t> colors_;
     mutable buffer<int> indices_;
 
 private:
@@ -81,6 +80,9 @@ private:
 
     ID3D11RenderTargetView* render_view_;
     ID3D11Texture2D* back_buffer_;
+
+    Microsoft::WRL::ComPtr<ID3D11DepthStencilView> depth_stencil_view_;
+    Microsoft::WRL::ComPtr<ID3D11Texture2D> depth_stencil_buffer_;
 
     mutable std::chrono::time_point<std::chrono::steady_clock> prev_time_;
     int start_time_;

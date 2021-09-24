@@ -176,6 +176,10 @@ XMVECTOR const& camera::get_left_vector() {
     return vec_left_;
 }
 
+XMVECTOR const& camera::get_up_vector() {
+    return vec_up_;
+}
+
 void camera::update_view_matrix_() //updates view matrix and also updates the movement vectors
 {
     //calculate camera rotation matrix
@@ -189,9 +193,12 @@ void camera::update_view_matrix_() //updates view matrix and also updates the mo
     //rebuild view matrix
     view_matrix_ = XMMatrixLookAtLH(pos_vector_, cam_target, up_dir);
 
-    XMMATRIX vec_rotation_matrix = XMMatrixRotationRollPitchYaw(0.f, rot_.y, 0.f);
+    //XMMATRIX vec_rotation_matrix = XMMatrixRotationRollPitchYaw(0.f, rot_.y, 0.f);
+    XMMATRIX vec_rotation_matrix = XMMatrixRotationRollPitchYaw(rot_.x, rot_.y, rot_.z);
     vec_forward_ = XMVector3TransformCoord(DEFAULT_FORWARD_VECTOR_, vec_rotation_matrix);
     vec_backward_ = XMVector3TransformCoord(DEFAULT_BACKWARD_VECTOR_, vec_rotation_matrix);
     vec_left_ = XMVector3TransformCoord(DEFAULT_LEFT_VECTOR_, vec_rotation_matrix);
     vec_right_ = XMVector3TransformCoord(DEFAULT_RIGHT_VECTOR_, vec_rotation_matrix);
+    vec_up_ = XMVector3TransformCoord(DEFAULT_UP_VECTOR_, vec_rotation_matrix);
+    //vec_up_ = up_dir;
 }

@@ -2,6 +2,7 @@
 
 #include <dxframework/game.hpp>
 #include <dxframework/game_component.hpp>
+#include <dxframework/triangle_component.hpp>
 #include <dxframework/camera.hpp>
 
 namespace dxframework {
@@ -22,7 +23,25 @@ private:
     camera camera_;
     float input_x_axis_{ 0.f };
     float input_y_axis_{ 0.f };
+    float input_z_axis_{ 0.f };
+    float pitch_{ 0.f };
+    float yaw_{ 0.f };
+    bool w_pressed_{ false };
+    bool s_pressed_{ false };
+    bool a_pressed_{ false };
+    bool d_pressed_{ false };
+    bool e_pressed_{ false };
+    bool q_pressed_{ false };
+    bool up_pressed_{ false };
+    bool down_pressed_{ false };
+    bool left_pressed_{ false };
+    bool right_pressed_{ false };
+    bool left_mouse_button_pressed_{ false };
+    std::tuple<int, int> mouse_start_pos_;
+    std::tuple<int, int> mouse_cur_pos_;
     float cam_speed_{ 0.04f };
+
+    triangle_component* tr_;
 };
 
 } // namespace dxframework

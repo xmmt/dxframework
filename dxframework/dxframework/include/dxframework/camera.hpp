@@ -41,6 +41,7 @@ public:
     const DirectX::XMVECTOR& get_right_vector();
     const DirectX::XMVECTOR& get_backward_vector();
     const DirectX::XMVECTOR& get_left_vector();
+    const DirectX::XMVECTOR& get_up_vector();
 
 private:
     void update_view_matrix_();
@@ -61,6 +62,7 @@ private:
     DirectX::XMVECTOR vec_left_;
     DirectX::XMVECTOR vec_right_;
     DirectX::XMVECTOR vec_backward_;
+    DirectX::XMVECTOR vec_up_;
 };
 
 } // namespace dxframework

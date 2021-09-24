@@ -1,6 +1,10 @@
 #pragma once
 
+#pragma push_macro("min")
+#undef min
 #include <assimp/material.h>
+#pragma pop_macro("min")
+
 
 #include <dxframework/color.hpp>
 

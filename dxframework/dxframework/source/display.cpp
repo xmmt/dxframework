@@ -19,7 +19,7 @@ constexpr std::optional<input_device::key> to_input_device_key(WPARAM key) {
     case 0x42:          return std::nullopt;
     case 0x43:          return std::nullopt;
     case 0x44:          return input_device::key::D;
-    case 0x45:          return std::nullopt;
+    case 0x45:          return input_device::key::E;
     case 0x46:          return std::nullopt;
     case 0x47:          return std::nullopt;
     case 0x48:          return std::nullopt;
@@ -31,7 +31,7 @@ constexpr std::optional<input_device::key> to_input_device_key(WPARAM key) {
     case 0x4E:          return std::nullopt;
     case 0x4F:          return std::nullopt;
     case 0x50:          return std::nullopt;
-    case 0x51:          return std::nullopt;
+    case 0x51:          return input_device::key::Q;
     case 0x52:          return std::nullopt;
     case 0x53:          return input_device::key::S;
     case 0x54:          return std::nullopt;
@@ -45,6 +45,10 @@ constexpr std::optional<input_device::key> to_input_device_key(WPARAM key) {
     case VK_RSHIFT:     return std::nullopt;
     case VK_LCONTROL:   return input_device::key::LEFT_CTRL;
     case VK_RCONTROL:   return std::nullopt;
+    case VK_LEFT:       return input_device::key::LEFT;
+    case VK_UP:         return input_device::key::UP;
+    case VK_RIGHT:      return input_device::key::RIGHT;
+    case VK_DOWN:       return input_device::key::DOWN;
     default:            return std::nullopt;
         // clang-format on
     }
@@ -60,9 +64,15 @@ constexpr unsigned from_input_device_key(input_device::key key) {
     case input_device::key::D:                   return 0x44;
     case input_device::key::S:                   return 0x53;
     case input_device::key::W:                   return 0x57;
+    case input_device::key::E:                   return 0x45;
+    case input_device::key::Q:                   return 0x51;
     case input_device::key::LEFT_SHIFT:          return VK_LSHIFT;
     case input_device::key::LEFT_CTRL:           return VK_LCONTROL;
-    default:                                    return 0x07; // undefined
+    case input_device::key::LEFT:                return VK_LEFT;
+    case input_device::key::UP:                  return VK_UP;
+    case input_device::key::RIGHT:               return VK_RIGHT;
+    case input_device::key::DOWN:                return VK_DOWN;
+    default:                                     return 0x07; // undefined
         // clang-format on
     }
 }
@@ -96,8 +106,8 @@ display::display(std::string title, HINSTANCE h_instance, input_device& input_de
     auto screenHeight = GetSystemMetrics(SM_CYSCREEN);
 
     // If windowed then set it to 800x800 resolution.
-    int width = 800;
-    int height = 800;
+    int width = 1500;
+    int height = 1500;
 
     // Place the window in the middle of the screen.
     auto posX = (GetSystemMetrics(SM_CXSCREEN) - screenWidth) / 2;

@@ -14,11 +14,17 @@ public:
         A,
         S,
         D,
+        Q,
+        E,
         SPACEBAR,
         ESCAPE,
         ENTER,
         LEFT_SHIFT,
         LEFT_CTRL,
+        LEFT,
+        UP,
+        RIGHT,
+        DOWN,
         _COUNT,
     };
     enum class event_type {
