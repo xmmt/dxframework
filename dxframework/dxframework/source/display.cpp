@@ -106,7 +106,7 @@ display::display(std::string title, HINSTANCE h_instance, input_device& input_de
     auto screenHeight = GetSystemMetrics(SM_CYSCREEN);
 
     // If windowed then set it to 800x800 resolution.
-    int width = 2400;
+    int width = 1200;
     int height = 1200;
 
     // Place the window in the middle of the screen.

@@ -109,12 +109,12 @@ void triangles_game::init_() {
 
     lightshader_.get_data().ambient_light_color = DirectX::XMFLOAT3({ 0.3f, 0.3f, 0.3f });
     lightshader_.get_data().ambient_light_strength = 0.5f;
-    lightshader_.get_data().specular_power = 0.5f;
+    lightshader_.get_data().specular_power = 0.9f;
 
     components_.push_back(std::make_shared<triangle_component>(renderer_,
-      buffer<vertex>{ DirectX::XMFLOAT4{ 0.5f, 0.5f, 0.5f, 1.0f },
-        DirectX::XMFLOAT4{ -0.5f, -0.5f, 0.5f, 1.0f },
-        DirectX::XMFLOAT4{ 0.5f, -0.5f, 0.5f, 1.0f } },
+      buffer<vertex>{ DirectX::XMFLOAT4{ 0.5f, 1.5f, 0.5f, 1.0f },
+        DirectX::XMFLOAT4{ -0.5f, 0.5f, 0.5f, 1.0f },
+        DirectX::XMFLOAT4{ 0.5f, 0.5f, 0.5f, 1.0f } },
       buffer<color_t>{ DirectX::XMFLOAT4{ 1.0f, 0.0f, 0.0f, 1.0f },
         DirectX::XMFLOAT4{ 0.0f, 0.0f, 1.0f, 1.0f },
         DirectX::XMFLOAT4{ 0.0f, 1.0f, 0.0f, 1.0f } }));

@@ -1,27 +1,27 @@
 #pragma pack_matrix( row_major )
 
-cbuffer lightPointBuffer : register(b0)
+cbuffer point_light_buf : register(b0)
 {
-    float3 dynamicLightColor;
-    float dynamicLightStrength;
-    float3 dynamicLightPosition;
+    float3 light_color;
+    float light_strength;
+    float3 light_pos;
 }
 
-cbuffer FogBuffer : register(b1)
+cbuffer fog_buf : register(b1)
 {
-    float4 gFogColor;
-    float gFogStart;
-    float gFogRange;
+    float4 fog_color;
+    float fog_near;
+    float fog_far;
 
-    float3 EyePosW;
+    float3 eye_pos_w;
 
 }
 
-cbuffer LightBuffer : register(b2)
+cbuffer light_buf : register(b2)
 {
-    float3 ambientLightColor;
-    float ambientLightStrength;
-    float specularPower;
+    float3 ambient_light_color;
+    float ambient_light_strength;
+    float specular_power;
 }
 
 struct PS_INPUT
@@ -42,21 +42,21 @@ float4 PS_main(PS_INPUT input) : SV_TARGET
    
    float3 viewerDir = normalize(input.inPosition - input.inWorldPos);
 
-   float3 ambientLight = ambientLightColor * ambientLightStrength;
+   float3 ambientLight = ambient_light_color * ambient_light_strength;
 
    float3 appliedLight = ambientLight;
 
-   float3 vectorToLight = normalize(dynamicLightPosition - input.inWorldPos);
+   float3 vectorToLight = normalize(light_pos - input.inWorldPos);
 
-   //float3 refVec = normalize(reflect(dynamicLightPosition, input.inNormal));
+   //float3 refVec = normalize(reflect(light_pos, input.inNormal));
 
    float3 diffuseLightIntensity = max(dot(vectorToLight, input.inNormal), 0);
 
-   float3 diffuseLight = diffuseLightIntensity * dynamicLightStrength * dynamicLightColor;
+   float3 diffuseLight = diffuseLightIntensity * light_strength * light_color;
 
-   float lightIntensity = saturate(dot(input.inNormal, dynamicLightPosition));
-   float3 reflection = normalize(2 * lightIntensity * input.inNormal - dynamicLightPosition);
-   float4 specular = pow(saturate(dot(reflection, viewerDir)), specularPower);
+   float lightIntensity = saturate(dot(input.inNormal, light_pos));
+   float3 reflection = normalize(2 * lightIntensity * input.inNormal - light_pos);
+   float4 specular = pow(saturate(dot(reflection, viewerDir)), specular_power);
 
    appliedLight += diffuseLight;
 
@@ -64,10 +64,10 @@ float4 PS_main(PS_INPUT input) : SV_TARGET
 
    float3 finalColor = sampleColor * appliedLight;
 
-   float3 toEyeW = EyePosW - input.inWorldPos;
+   float3 toEyeW = eye_pos_w - input.inWorldPos;
    float distToEye = length(toEyeW);
-   float fogAmount = saturate((distToEye - gFogStart) / gFogRange);
-   finalColor = lerp(finalColor, gFogColor, fogAmount);
+   float fogAmount = saturate((distToEye - fog_near) / fog_far);
+   finalColor = lerp(finalColor, fog_color, fogAmount);
 
    return float4(finalColor, 1.0f);
 }
