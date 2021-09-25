@@ -11,8 +11,9 @@ constant_buffer<CB_VS_vertexshader> floor_component::cb_;
 floor_component::floor_component(renderer& renderer, std::string file_path)
     : game_component{ renderer }
     , file_path_{ std::move(file_path) } {
-    transform_.set_position({ 0.f, 0.f, 0.f });
-    transform_.set_rotation(90.f, 0.f, 0.f);
+    transform_.set_position({ -6.f, -3.f, 0.f });
+    //transform_.set_rotation(0.f, DirectX::XM_PIDIV2, 0.f);
+    transform_.set_scale(.1f, .01f, .1f);
 }
 
 void floor_component::destroy_resources() {
@@ -47,5 +48,5 @@ void floor_component::reload() {
 }
 
 void floor_component::update() {
-    transform_.add_local_rotation({ 0.f, 1.f, 0.f }, 0.05f);
+    //transform_.add_local_rotation({ 0.f, 1.f, 0.f }, 0.05f);
 }

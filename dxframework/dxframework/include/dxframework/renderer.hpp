@@ -39,13 +39,13 @@ public:
     void init();
     void destroy();
     void run_loop(std::function<void(float)> run_frame) const;
-    void prepare_frame() const;
+    void prepare_frame();
     void end_frame() const;
     void draw(
       buffer<vertex>& vertices,
       buffer<color_t>& colors,
       buffer<int>& indices,
-      DirectX::XMMATRIX const& view_projection_matrix) const;
+      DirectX::XMMATRIX const& view_projection_matrix);
     void set_shaders(vertex_shader& vs, pixel_shader& ps);
 
 public:
@@ -54,6 +54,9 @@ public:
     }
     auto get_context() {
         return context_;
+    }
+    auto get_size() {
+        return display_.size();
     }
 
 private:
@@ -83,10 +86,12 @@ private:
 
     Microsoft::WRL::ComPtr<ID3D11DepthStencilView> depth_stencil_view_;
     Microsoft::WRL::ComPtr<ID3D11Texture2D> depth_stencil_buffer_;
+    Microsoft::WRL::ComPtr<ID3D11SamplerState> sampler_state_;
 
     mutable std::chrono::time_point<std::chrono::steady_clock> prev_time_;
     int start_time_;
     mutable float total_time_{ 0 };
+    mutable float total_time_2_{ 0 };
     mutable unsigned int frame_count_{ 0 };
 };
 

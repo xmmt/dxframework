@@ -37,7 +37,7 @@ void renderer::run_loop(std::function<void(float)> run_frame) const {
     display_.run_loop(run_frame);
 }
 
-void renderer::prepare_frame() const {
+void renderer::prepare_frame() {
     if (!initialized_) {
         throw std::runtime_error("renderer is not initialized");
     }
@@ -50,6 +50,7 @@ void renderer::prepare_frame() const {
     prev_time_ = cur_time;
 
     total_time_ += delta_time;
+    total_time_2_ = std::fmod(total_time_2_ + delta_time, DirectX::XM_2PI);
     frame_count_++;
 
     if (total_time_ > 1.0f) {
@@ -106,6 +107,14 @@ void renderer::prepare_frame() const {
 
     context_->OMSetBlendState(NULL, NULL, 0xFFFFFFFF);
 
+    CD3D11_SAMPLER_DESC sampDesc(D3D11_DEFAULT);
+    sampDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
+    sampDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
+    sampDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
+    throw_if_failed(device_->CreateSamplerState(&sampDesc, sampler_state_.GetAddressOf()));
+
+    context_->PSSetSamplers(0, 1, sampler_state_.GetAddressOf());
+
     CD3D11_DEPTH_STENCIL_DESC depth_stencil_desc(D3D11_DEFAULT);
     depth_stencil_desc.DepthFunc = D3D11_COMPARISON_LESS_EQUAL;
 
@@ -116,7 +125,11 @@ void renderer::prepare_frame() const {
 
     //context_->OMSetRenderTargets(1, &render_view_, depth_stencil_view_.Get());
 
-    color_t color{ total_time_, 0.1f, 0.1f, 1.0f };
+    color_t color{ 
+        std::lerp(0.07f, 0.15f, std::abs(std::sin(total_time_2_))), 
+        std::lerp(0.07f, 0.15f, std::abs(std::sin(total_time_2_))),
+        std::lerp(0.11f, 0.19f, std::abs(std::sin(total_time_2_))),
+        1.0f };
     context_->ClearRenderTargetView(render_view_, reinterpret_cast<float*>(&color));
     context_->ClearDepthStencilView(depth_stencil_view_.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 
@@ -148,7 +161,7 @@ void renderer::draw(
   buffer<vertex>& vertices,
   buffer<color_t>& colors,
   buffer<int>& indices,
-  DirectX::XMMATRIX const& view_projection_matrix) const {
+  DirectX::XMMATRIX const& view_projection_matrix) {
     if (!initialized_) {
         throw std::runtime_error("renderer is not initialized");
     }

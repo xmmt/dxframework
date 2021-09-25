@@ -7,9 +7,12 @@ ADD_DEFINITIONS(-D_UNICODE)
 
 set(HEADERS
     include/dxframework/camera.hpp
+    include/dxframework/cat_component.hpp
     include/dxframework/color.hpp
     include/dxframework/constant_buffer_types.hpp
+    include/dxframework/cube_component.hpp
     include/dxframework/display.hpp
+    include/dxframework/earth_component.hpp
     include/dxframework/fruit_component.hpp
     include/dxframework/floor_component.hpp
     include/dxframework/game.hpp
@@ -21,6 +24,7 @@ set(HEADERS
     include/dxframework/renderer.hpp
     include/dxframework/shader.hpp
     include/dxframework/sphere_component.hpp
+    include/dxframework/sun_component.hpp
     include/dxframework/texture.hpp
     include/dxframework/timer.hpp
     include/dxframework/transform.hpp
@@ -33,7 +37,10 @@ set(HEADERS
 
 set(SOURCES
     source/camera.cpp
+    source/cat_component.cpp
+    source/cube_component.cpp
     source/display.cpp
+    source/earth_component.cpp
     source/floor_component.cpp
     source/fruit_component.cpp
     source/game.cpp
@@ -46,6 +53,7 @@ set(SOURCES
     source/renderer.cpp
     source/shader.cpp
     source/sphere_component.cpp
+    source/sun_component.cpp
     source/texture.cpp
     source/timer.cpp
     source/transform.cpp

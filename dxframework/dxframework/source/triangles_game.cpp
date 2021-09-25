@@ -11,6 +11,24 @@ triangles_game::triangles_game(renderer& ren, input_device& input_dev)
 
 void triangles_game::run_frame_(float delta) {
     renderer_.prepare_frame();
+
+    cb_ps_lightshader_.get_data().dynamic_light_color = DirectX::XMFLOAT3(1.f, 1.0f, 0.8f);      //light.lightColor;
+    cb_ps_lightshader_.get_data().dynamic_light_strength = 3.f;                                  //light.lightStrength;
+    cb_ps_lightshader_.get_data().dynamic_light_position = sun_->get_transform().get_world_position(); //light.transform->GetPosition();
+    fogshader_.get_data().eye_pos_w = camera_.get_position_float_3();                            //player.transform->GetPosition();
+
+    //utils::debug_write::info("sun get position {} {} {}\n",
+    //  camera_.get_position_float_3().x,
+    //  camera_.get_position_float_3().y,
+    //  camera_.get_position_float_3().z);
+
+    cb_ps_lightshader_.apply_changes();
+    fogshader_.apply_changes();
+    lightshader_.apply_changes();
+    renderer_.get_context()->PSSetConstantBuffers(0, 1, cb_ps_lightshader_.get_address_of());
+    renderer_.get_context()->PSSetConstantBuffers(1, 1, fogshader_.get_address_of());
+    renderer_.get_context()->PSSetConstantBuffers(2, 1, lightshader_.get_address_of());
+
     input_y_axis_ = w_pressed_ ? s_pressed_ ? 0.f : 1.f : s_pressed_ ? -1.f
                                                                      : 0.f;
     input_x_axis_ = d_pressed_ ? a_pressed_ ? 0.f : 1.f : a_pressed_ ? -1.f
@@ -81,6 +99,18 @@ void triangles_game::run_() {
 }
 
 void triangles_game::init_() {
+    cb_ps_lightshader_.init(renderer_.get_device(), renderer_.get_context());
+    fogshader_.init(renderer_.get_device(), renderer_.get_context());
+    lightshader_.init(renderer_.get_device(), renderer_.get_context());
+
+    fogshader_.get_data().g_fog_color = DirectX::XMFLOAT4({ 0.3f, 0.3f, 0.3f, 0.5f });
+    fogshader_.get_data().g_fog_start = 0.0f;
+    fogshader_.get_data().g_fog_range = 10000000.0f;
+
+    lightshader_.get_data().ambient_light_color = DirectX::XMFLOAT3({ 0.3f, 0.3f, 0.3f });
+    lightshader_.get_data().ambient_light_strength = 0.5f;
+    lightshader_.get_data().specular_power = 0.5f;
+
     components_.push_back(std::make_shared<triangle_component>(renderer_,
       buffer<vertex>{ DirectX::XMFLOAT4{ 0.5f, 0.5f, 0.5f, 1.0f },
         DirectX::XMFLOAT4{ -0.5f, -0.5f, 0.5f, 1.0f },
@@ -91,31 +121,49 @@ void triangles_game::init_() {
     components_.back()->initialize();
     tr_ = static_cast<triangle_component*>(components_.back().get());
 
-    components_.push_back(std::make_shared<fruit_component>(
-      renderer_,
-      "../../../../dxframework/models/catt/Untitled.obj"));
-    components_.back()->initialize();
-    components_.push_back(std::make_shared<fruit_component>(
-      renderer_,
-      "../../../../dxframework/models/sunn/Untitled.obj"));
-    components_.back()->initialize();
     //components_.push_back(std::make_shared<fruit_component>(
     //  renderer_,
-    //  "../../../../dxframework/models/guitar/guitar.obj"));
+    //  "../../../../dxframework/models/catt/Untitled.obj"));
     //components_.back()->initialize();
-    components_.push_back(std::make_shared<fruit_component>(
+
+    components_.push_back(std::make_shared<sun_component>(
       renderer_,
-      "../../../../dxframework/models/earth/Untitled.obj"));
-    components_.back()->initialize();
+      "../../../../dxframework/models/sunn/Untitled.obj"));
+    sun_ = static_cast<sun_component*>(components_.back().get());
+    sun_->initialize();
+
+    components_.push_back(std::make_shared<guitar_component>(
+      renderer_,
+      "../../../../dxframework/models/guitar/guitar.obj"));
+    guitar_ = static_cast<guitar_component*>(components_.back().get());
+    guitar_->initialize();
+
+    components_.push_back(std::make_shared<earth_component>(
+      renderer_,
+      "../../../../dxframework/models/earth2/Untitled.obj"));
+    earth_ = static_cast<earth_component*>(components_.back().get());
+    earth_->initialize();
+
     components_.push_back(std::make_shared<floor_component>(
       renderer_,
-      "../../../../dxframework/models/floor/Untitled.obj"));
+      "../../../../dxframework/models/rubik/rubik.fbx"));
+      //"../../../../dxframework/models/floor3/Untitled.obj"));
     components_.back()->initialize();
 
-    auto window_width = 800;
-    auto window_height = 800;
+    for (int i = 0; i < 6; ++i) {
+        components_.push_back(std::make_shared<cube_component>(
+          renderer_,
+          "../../../../dxframework/models/rubik/rubik.fbx"));
+          //"../../../../dxframework/models/cube/Untitled.obj"));
+        components_.back()->initialize();
+        cubes_.push_back(static_cast<cube_component*>(components_.back().get()));
+        cubes_.back()->get_transform().add_position({ static_cast<float>(i - 3) * 2, -0.2f, -4.f });
+    }
+
+    auto window_width = renderer_.get_size().width;
+    auto window_height = renderer_.get_size().height;
     camera_.set_position(2.0f, 2.0f, -3.0f);
-    camera_.set_projection(90.0f, static_cast<float>(window_width) / static_cast<float>(window_height), 0.1f, 1000.0f);
+    camera_.set_projection(60.0f, static_cast<float>(window_width) / static_cast<float>(window_height), 0.1f, 1000.0f);
 
     //input_device_.add_on_key_pressed_callback(input_device::key::W, [this] { input_y_axis_ = min(input_y_axis_ + 1.f, 1.f); });
     //input_device_.add_on_key_pressed_callback(input_device::key::S, [this] { input_y_axis_ = max(input_y_axis_ - 1.f, -1.f); });

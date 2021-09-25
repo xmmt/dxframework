@@ -38,7 +38,7 @@ SamplerState objSamplerState : SAMPLER: register(s0);
 float4 PS_main(PS_INPUT input) : SV_TARGET
 {
    float3 sampleColor = objTexture.Sample(objSamplerState, input.inTexCoord);
-   return float4(sampleColor, 1.f);
+   //return float4(sampleColor, 1.f);
    
    float3 viewerDir = normalize(input.inPosition - input.inWorldPos);
 
@@ -62,12 +62,12 @@ float4 PS_main(PS_INPUT input) : SV_TARGET
 
    appliedLight += specular;
 
-   float3 finalColor = sampleColor * 1.f;//appliedLight;
+   float3 finalColor = sampleColor * appliedLight;
 
    float3 toEyeW = EyePosW - input.inWorldPos;
    float distToEye = length(toEyeW);
    float fogAmount = saturate((distToEye - gFogStart) / gFogRange);
-   finalColor = lerp(finalColor, gFogColor, 0.f /* fogAmount */);
+   finalColor = lerp(finalColor, gFogColor, fogAmount);
 
    return float4(finalColor, 1.0f);
 }
