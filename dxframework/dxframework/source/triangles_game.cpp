@@ -157,7 +157,7 @@ void triangles_game::init_() {
           //"../../../../dxframework/models/cube/Untitled.obj"));
         components_.back()->initialize();
         cubes_.push_back(static_cast<cube_component*>(components_.back().get()));
-        cubes_.back()->get_transform().add_position({ static_cast<float>(i - 3) * 2, -0.2f, -4.f });
+        cubes_.back()->get_transform().add_position({ static_cast<float>(i - 3) * 0.05f, -0.2f, -4.f });
     }
 
     auto window_width = renderer_.get_size().width;

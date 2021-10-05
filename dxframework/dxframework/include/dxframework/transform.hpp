@@ -15,9 +15,6 @@ public:
     ~transform() = default;
 
     transform* get_parent() const;
-    std::vector<transform*>& get_child();
-    void add_child(transform* obj);
-    void set_parent(transform* parent);
 
     DirectX::SimpleMath::Vector3 get_position() const;
     DirectX::SimpleMath::Vector3 get_world_position() const;
@@ -44,7 +41,6 @@ private:
     DirectX::XMFLOAT3 rot_;
 
     transform* parent_{ nullptr };
-    std::vector<transform*> children_;
 };
 
 } // namespace dxframework

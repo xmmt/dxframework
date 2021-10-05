@@ -26,7 +26,7 @@ cbuffer light_buf : register(b2)
 
 struct PS_INPUT
 {
-    float4 inPosition : SV_POSITION;
+    float4 in_pos : SV_POSITION;
     float2 inTexCoord : TEXCOORD;
     float3 inNormal : NORMAL;
     float3 inWorldPos : WORLD_POSITION;
@@ -40,15 +40,13 @@ float4 PS_main(PS_INPUT input) : SV_TARGET
    float3 sampleColor = objTexture.Sample(objSamplerState, input.inTexCoord);
    //return float4(sampleColor, 1.f);
    
-   float3 viewerDir = normalize(input.inPosition - input.inWorldPos);
+   float3 viewerDir = normalize(input.in_pos - input.inWorldPos);
 
    float3 ambientLight = ambient_light_color * ambient_light_strength;
 
    float3 appliedLight = ambientLight;
 
    float3 vectorToLight = normalize(light_pos - input.inWorldPos);
-
-   //float3 refVec = normalize(reflect(light_pos, input.inNormal));
 
    float3 diffuseLightIntensity = max(dot(vectorToLight, input.inNormal), 0);
 
